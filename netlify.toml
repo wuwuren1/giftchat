@@ -1,0 +1,9 @@
+[build]
+  node_version = "18"
+
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["@langchain/langsmith", "serpapi"]
+
+   
