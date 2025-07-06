@@ -3,7 +3,7 @@
 Welcome to your group AI application template repository!
 A repository is a place where you can store your code, your files, and each file's revision history. Repositories can have multiple collaborators and can be either public or private.
 
-Any changes you make here will be reflected in your group project URL: https://itom6219.netlify.app/
+Any changes you make here will be reflected in your group project URL: https://sufe2025g2.netlify.app/
 
 ## 2. Create Your Own Branch
 What if you want to create your own version of the application without affecting the main version? Branches allow you to develop features, fix bugs, or safely experiment with new ideas in a contained area of your repository. You always create a branch from an existing branch. Typically, you might create a new branch from the default branch of your repository.
