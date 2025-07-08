@@ -1,54 +1,487 @@
-<!doctype html>
-<html>
-
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
- 
-</script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-43HYZ5T4C8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiftChat - 智能情感分析助手</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  gtag('config', 'G-43HYZ5T4C8');
-</script>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fafafa;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7375901080347470"
-     crossorigin="anonymous"></script>
-	
-	<title></title>
-	<link rel="stylesheet" href="index.css">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+        /* 头部 */
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 16px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        /* 主体容器 */
+        .container {
+            flex: 1;
+            max-width: 768px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 80px);
+        }
+
+        /* 聊天区域 */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 欢迎消息 */
+        .welcome-message {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .welcome-message h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .welcome-message p {
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        /* 消息气泡 */
+        .message {
+            display: flex;
+            margin-bottom: 16px;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .message.user .message-content {
+            background: #2563eb;
+            color: white;
+        }
+
+        .message.assistant .message-content {
+            background: white;
+            color: #1a1a1a;
+            border: 1px solid #e5e5e5;
+        }
+
+        /* 打字指示器 */
+        .typing-indicator {
+            display: none;
+            justify-content: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .typing-content {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 18px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dots span {
+            width: 6px;
+            height: 6px;
+            background: #9ca3af;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.4; }
+            30% { opacity: 1; }
+        }
+
+        /* 情感分析结果卡片 */
+        .emotion-analysis {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        .emotion-analysis h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .emotion-summary {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .emotion-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .emotion-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .emotion-stat.positive { color: #059669; }
+        .emotion-stat.negative { color: #dc2626; }
+        .emotion-stat.neutral { color: #6b7280; }
+
+        .overall-sentiment {
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .overall-sentiment.positive {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .overall-sentiment.negative {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .overall-sentiment.neutral {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .entities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .entity-category {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .entity-category h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .entity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+
+        .entity-name {
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .entity-emotion {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .entity-emotion.like {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .entity-emotion.dislike {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .entity-emotion.uncertain {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* 输入区域 */
+        .input-area {
+            border-top: 1px solid #e5e5e5;
+            background: white;
+            padding: 16px 20px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        #user-input {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 24px;
+            padding: 12px 20px;
+            font-size: 15px;
+            line-height: 1.4;
+            outline: none;
+            transition: border-color 0.2s;
+            resize: none;
+            min-height: 48px;
+            max-height: 120px;
+        }
+
+        #user-input:focus {
+            border-color: #2563eb;
+        }
+
+        #user-input::placeholder {
+            color: #9ca3af;
+        }
+
+        #send-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+
+        #send-btn:hover:not(:disabled) {
+            background: #1d4ed8;
+        }
+
+        #send-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* 操作按钮 */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .action-btn {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #e5e7eb;
+        }
+
+        /* 错误提示 */
+        .error-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .container {
+                height: calc(100vh - 70px);
+            }
+
+            .header {
+                padding: 12px 16px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .chat-area {
+                padding: 16px;
+            }
+
+            .input-area {
+                padding: 12px 16px;
+            }
+
+            .message-content {
+                max-width: 90%;
+            }
+
+            .entities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .emotion-stats {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        /* 滚动条样式 */
+        .chat-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        .chat-area::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
 </head>
 
 <body>
-	<main>
-		<section class="intro">
-			<h1>Market Minds</h1>
-			<h2>Get promotional <strong>copy</strong> for your products <strong>fast</strong></h2>
-			<h2>Get <strong> competitors </strong> of your products <strong>in real time</strong></h2>
-			<p>Powered by AI 🤖</p>
-		</section>
-		<section class="ad-input" id="ad-input">
-			<label for="">Product Name</label>
-			<input type="text" placeholder="Water Bottle" id="name">
-			<label for="">Description</label>
-			<textarea placeholder="Extra big water bottle to cope with the Texas heat" id="desc"></textarea>
-			<label for="">Target market</label>
-			<textarea placeholder="College students who go to Southern Methodist University" id="target"></textarea>
-			<button id="advertising-btn">Generate Copy</button>
-			<button id="competitor-btn">Search for Competitors</button>
-		</section> 
-		<section class="ad-output" id="ad-output">
-			<button id="again-btn">Again!</button>
-		</section>
-	</main>
-	<script type="module" src="index.js"></script>
+    <!-- 头部 -->
+    <div class="header">
+        <h1>🧠 GiftChat</h1>
+        <p>智能实体情感分析助手</p>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 聊天区域 -->
+        <div class="chat-area" id="chat-area">
+            <!-- 欢迎消息 -->
+            <div class="welcome-message">
+                <h2>👋 你好！我是GiftChat</h2>
+                <p>分享你的想法，我会分析其中提到的实体和你对它们的情感倾向！</p>
+            </div>
+        </div>
+
+        <!-- 打字指示器 -->
+        <div class="typing-indicator" id="typing-indicator">
+            <div class="typing-content">
+                <span>Gift正在分析</span>
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-area">
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea id="user-input" placeholder="分享你的想法，比如：我很喜欢我的女朋友小丽，她特别爱吃巧克力..." rows="1"></textarea>
+                </div>
+                <button id="send-btn" disabled>分析</button>
+            </div>
+            <div class="action-buttons">
+                <button class="action-btn" onclick="clearChat()">清空对话</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入外部JavaScript文件 -->
+    <script src="index.js"></script>
 </body>
-
 </html>
-
-<!-- Fish flavoured vegan ice cream -->
